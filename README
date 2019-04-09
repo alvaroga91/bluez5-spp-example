@@ -1,4 +1,5 @@
 # spp-echo-server
+
 Simple Bluetooth SPP echo server based on BlueZ 5 calls
 
 Tested to work in a Colibri iMX6ULL with BlueZ 5.46, with Android's Serial Bluetooth Terminal and Windows 10 Bluetooth COM feature (set as ongoing):
@@ -10,7 +11,7 @@ Works better if communication is trusted.
 
 Launch this application and service should become available from other ends software. 
 
-# Original comments
+Original comments
 
 This is an example Bluetooth Serial Port Profile client and server
 application which uses bluez 5.x to exercise the Bluetooth Serial
