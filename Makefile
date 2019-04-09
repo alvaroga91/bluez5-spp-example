@@ -9,7 +9,7 @@ CFLAGS = -g -Wall -Werror
 all: btspp
 
 btspp: btspp.c profile1-iface.h profile1-iface.c
-	gcc $^ -o $@ $(CFLAGS) $(CFLAGS_DBUS) $(CFLAGS_DBUS_GLIB) $(CFLAGS_GIO) $(CFLAGS_GIO_UNIX)
+	${CC} $^ -o $@ $(CFLAGS) $(CFLAGS_DBUS) $(CFLAGS_DBUS_GLIB) $(CFLAGS_GIO) $(CFLAGS_GIO_UNIX)
 
 clean:
 	rm -f btspp

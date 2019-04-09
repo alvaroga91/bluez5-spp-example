@@ -50,18 +50,20 @@ struct spp_data {
 	struct sockaddr_rc remote;	
 };
 
+int loop=0;
+
 int register_profile(struct spp_data *spp, GDBusProxy *proxy)
 {
 	GVariant *profile;
 	GVariantBuilder profile_builder;
 	GError *error = NULL;
 
-	printf("register_profile called!\n");
+	printf("Registering Bluetooth SPP...\n");
 	
 	g_variant_builder_init(&profile_builder, G_VARIANT_TYPE("(osa{sv})"));
 
 	if (g_variant_is_object_path("/bluetooth/profile/serial_port")) {
-		printf("object path is good!\n");
+		printf("SPP path is good!\n");
 	}
 	
 	g_variant_builder_add (&profile_builder, "o",
@@ -116,26 +118,31 @@ int register_profile(struct spp_data *spp, GDBusProxy *proxy)
 				&error);
 	g_assert_no_error(error);
 
+	printf("Bluetooth SPP registered succesfully!\n");
+
 	return 0;
 }
 
 gboolean
 server_read_data (gpointer user_data) {
 	char buf[1024] = { 0 };
+	char buf2[1024] = { 0 };
 	int bytes_read;
 	int opts = 0;
 	struct spp_data *spp = user_data;
 	
-	printf("server_read_data called\n");
+	//printf("server_read_data called\n");
 
 	// set socket for blocking IO
+
+	
 	fcntl(spp->sock_fd, F_SETFL, opts);
 	opts = fcntl(spp->sock_fd, F_GETFL);
 	if (opts < 0) {
 		perror("fcntl(F_GETFL)");
 		exit(EXIT_FAILURE);
 	}
-
+	
 	opts &= ~O_NONBLOCK;
 	
 	if (fcntl(spp->sock_fd, F_SETFL,opts) < 0) {
@@ -144,21 +151,23 @@ server_read_data (gpointer user_data) {
 	}
 
 	// read data from the client
-	bytes_read = read(spp->sock_fd, buf, sizeof(buf));
+	bytes_read = read(spp->sock_fd, buf2, sizeof(buf));
 	if ( bytes_read > 0 ) {
-		printf("received [%s]\n", buf);
+		printf("Received %s\n", buf2);
 	} else {
 		printf("error reading from client [%d] %s\n", errno, strerror(errno));
+		return false;
 	}
 
-	// close connection
-	close(spp->sock_fd);
+	// Send Hello world! 
+	sprintf (buf, "Echo %d: %s", loop++, buf2);
+	write(spp->sock_fd, buf, strlen(buf));
+	printf("Echo sent!\n");
 
-	// all done!
-	g_main_loop_quit(spp->loop);
+	memset(buf, 0, sizeof(buf));
+	memset(buf2, 0, sizeof(buf2));
 
-	// make this a one-shot
-	return false;
+	return true;
 }
 
 gboolean
