@@ -11,7 +11,7 @@ Works better if communication is trusted.
 
 Launch this application and service should become available from other ends software. 
 
-Original comments
+# Original comments
 
 This is an example Bluetooth Serial Port Profile client and server
 application which uses bluez 5.x to exercise the Bluetooth Serial
