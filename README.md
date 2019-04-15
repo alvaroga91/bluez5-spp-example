@@ -11,6 +11,11 @@ Works better if communication is trusted.
 
 Launch this application and service should become available from other ends software. 
 
+Usage: ./btspp [-scf] [file...]
+	-s for SPP as an echo server
+	-c for SPP as a client
+	-f for FTP server (Currently not implemented)
+
 # Original comments
 
 This is an example Bluetooth Serial Port Profile client and server
